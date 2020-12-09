@@ -1,0 +1,187 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{name}}
+{% endblock %}
+
+{% block main %}
+    <h1>{{scrape['title']}}</h1>
+    <br>
+    <div class="accordion" id="accordionExample">
+      <div class="card">
+        <div class="card-header" id="headingOne">
+          <h4 class="mb-0">
+            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              Short description
+            </button>
+          </h4>
+        </div>
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+          <div class="card-body">
+            <p align='left'>
+                {% for s in scrape['short'] %}
+                <p align='left'>
+                    {{s}}
+                </p>
+                {% endfor %}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion" id="accordionExample2">
+      <div class="card">
+        <div class="card-header" id="headingTwo">
+          <h4 class="mb-0">
+            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+              Properties
+            </button>
+          </h4>
+        </div>
+
+        <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionExample2">
+          <div class="card-body">
+            <table class="table">
+                <tbody>
+                    {% for pair in scrape['images'] %}
+                    <tr>
+                        <td>
+                            {{pair[0]}}
+                        </td>
+                        <td>
+                            <img src="{{pair[1]}}">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if missing_args == 0 -%}
+    <br>
+    <h5>scipy functionalities for this distribution are not supported by the package. Sorry!</h5>
+    <br>
+    {% else -%}
+    <div class="accordion" id="accordionExample3">
+      <div class="card">
+        <div class="card-header" id="headingTwo2">
+          <h4 class="mb-0">
+            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseTwo2" aria-expanded="true" aria-controls="collapseTwo2">
+              Sample from this distribution
+            </button>
+          </h4>
+        </div>
+
+        <div id="collapseTwo2" class="collapse show" aria-labelledby="headingTwo2" data-parent="#accordionExample3">
+          <div class="card-body">
+            <p align="left">
+                This is the sampling utility for the {{name}} distribution. <br>
+                You can set parameters for your distribution below, and pick how many points you want to sample from this distribution!
+            </p>
+            <br>
+
+            <!-- Ask users for parameters required for sampling -->
+            <form action="/sample" method="get">
+                <div class="form-group row">
+                    <label for="scipy" class="col-sm-6 col-form-label">scipy module:</label>
+                    <div class="col-sm-6">
+                        <input type="text" readonly class="form-control-plaintext" name="scipy" value="{{scipy}}">
+                    </div>
+                </div>
+                <!-- Parameters required by the distribution if any -->
+                {% for arg in missing_args %}
+                <div class="form-group row">
+                    <label for="{{arg}}" class="col-sm-6 col-form-label">{{arg}}:</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="{{arg}}" type="number">
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="form-group row">
+                    <label for="samples" class="col-sm-6 col-form-label">Number of sampled points:</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="size" type="number" value="10">
+                    </div>
+                </div>
+                <br>
+                <small id="paraHelp" class="form-text text-muted">
+                    If you need help understanding what the parameters mean, check
+                    <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.{{scipy}}.html">the scipy docs for stats.{{scipy}}</a>.
+                </small>
+                <br>
+                <button class="btn btn-primary" type="submit">Sample!</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPECTANCY -->
+    <div class="accordion" id="accordionExample4">
+      <div class="card">
+        <div class="card-header" id="headingTwo22">
+          <h4 class="mb-0">
+            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseTwo22" aria-expanded="true" aria-controls="collapseTwo22">
+              Expectancy of functions of this distribution
+            </button>
+          </h4>
+        </div>
+
+        <div id="collapseTwo22" class="collapse show" aria-labelledby="headingTwo22" data-parent="#accordionExample4">
+          <div class="card-body">
+            <p align="left">
+                This utility for the {{name}} distribution allows you to compute expected values of arbitrary functions a random variable. <br>
+                For instance if X is a variable with {{name}} distribution, you might want to know E(X^2), or E(sin(X)), or the E of any other function of X. <br>
+                You can do this below by specifying parameters for your distribution and a python lambda expressing a function f for which you with to compute E(f(X)).
+            </p>
+            <br>
+
+            <form action="/expect" method="post">
+                <div class="form-group row">
+                    <label for="scipy" class="col-sm-6 col-form-label">scipy module:</label>
+                    <div class="col-sm-6">
+                        <input type="text" readonly class="form-control-plaintext" name="scipy" value="{{scipy}}">
+                    </div>
+                </div>
+                <!-- Parameters required by the distribution if any -->
+                {% for arg in missing_args %}
+                <div class="form-group row">
+                    <label for="{{arg}}" class="col-sm-6 col-form-label">{{arg}}:</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="{{arg}}" type="number">
+                    </div>
+                </div>
+                {% endfor %}
+
+                <div class="form-group row">
+                    <label for="samples" class="col-sm-6 col-form-label">Function:</label>
+                    <div class="col-sm-6">
+                        <pre><input type="text" class="form-control" name="lam" value="lambda x: x"></pre>
+                    </div>
+                </div>
+                <small id="lamHelp" class="form-text text-muted">
+                        You need to provide the function of the r.v. of which you want to compute the expectancy as a Python
+                        <a href="https://www.w3schools.com/python/python_lambda.asp">lambda</a>.
+                    </small>
+                    <small id="lamHelp2" class="form-text text-muted">
+                        Some examples are "lambda x: x ** 2", "lambda x: np.log(x)", "lambda x: 1.0 / (1.0 + np.exp(x))"...
+                    </small>
+                <br>
+                <small id="paraHelp" class="form-text text-muted">
+                    If you need help understanding what the parameters mean, check
+                    <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.{{scipy}}.html">the scipy docs for stats.{{scipy}}</a>.
+                </small>
+                <br>
+                <button class="btn btn-primary" type="submit">Find the expectancy!</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Sample
+{% endblock %}
+
+{% block main %}
+    <h3>Here is your expectancy:</h3>
+    <table class="table">
+        <tbody>
+            <tr>
+            <td>
+            Function:
+            </td>
+            <td>
+            {{lam}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+            Expectancy:
+            </td>
+            <td>
+            {{val}}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+    <h1>This is distributions50!</h1>
+    <br>
+    <p>
+        What an overused line. Welcome to my final project for cs50 in Fall 2020. <br>
+        My name is Fabio Pruneri and I'm a Junior in Winthrop house. <br>
+    </p>
+    <p>
+        This website displays information about various statistical distributions fecthing from Wikipedia. <br>
+        The distributions you can access at the moment are listed below, so feel free to click one and start exploring! <br>
+        Later on, you can add new distributions from the bottom of this page and change your favorites that display in the top bar. Enjoy!
+    </p>
+    <br>
+    <table class="table">
+        <thead>
+            <tr>
+                <th><a href="/readme">User manual</a></th>
+                <th><a href="/design">Design document</a></th>
+            </tr>
+        </thead>
+    </table>
+    <br>
+
+    <h2>List of distributions:</h2>
+    <br>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Wikipedia page</th>
+                <th>scipy class</th>
+                <th>Favorited?</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in dist %}
+            <tr>
+                <td><h5><a class="nav-link" href="/distribution?name={{d['name']}}">{{d['name']}}</a></h5></td>
+                <td>
+                    <a class="nav-link" href="{{d['wiki']}}">click!</a>
+                </td>
+                <td>
+                    {% if d['scipy'] != '' -%}
+                    <a class="nav-link" href="{{d['scipy']}}">click!</a>
+                    {% else -%}
+                    n/a
+                    {% endif %}
+                </td>
+                <td>
+                    {% if d['favorite'] -%}
+                    <u>Yes!</u><br>
+                    <span class="small"><a href="/changefav?name={{d['name']}}&new=0">set to no</a></span>
+                    {% else -%}
+                    No<br>
+                    <span class="small"><a href="/changefav?name={{d['name']}}&new=1">set to yes</a></span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+
+    <h2>Add your distribution!</h2>
+    <br>
+    <p>
+        To add a new distribution to the website, simply fill the form below. <br>
+        You can search for the name of the scipy class from <a href="https://docs.scipy.org/doc/scipy/reference/stats.html">here</a>. <br>
+        If you can't find it, no worries! You can still create a new entry using a wikipedia link alone, but some features will not be supported.
+    </p>
+
+    <form action="/create" method="post">
+        <div class="form-group">
+            <label for="name">Wikipedia link:</label>
+            <input autocomplete="off" autofocus class="form-control" name="wiki" placeholder="https://en.wikipedia.org/wiki/Normal_distribution" type="text">
+        </div>
+        <div class="form-group">
+            <label for="name">scipy class from <a href="https://docs.scipy.org/doc/scipy/reference/stats.html">here</a> (not required):</label>
+            <input autocomplete="off" autofocus class="form-control" name="scipy" placeholder="norm" type="text">
+        </div>
+        <button class="btn btn-primary" type="submit">Create!</button>
+    </form>
+
+{% endblock %}
