@@ -4,3 +4,7 @@ bs4
 requests
 gunicorn
 psycopg2
+cs50
+flask
+werkzeug
+flask_session
