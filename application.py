@@ -20,7 +20,7 @@ app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///distributions50.db")
+db = SQL("postgres://lpmiiweadhuulm:d81cef9a9a5e47568f397a6da738adf258642d88b10cf74c43cb48ed227f583c@ec2-54-163-47-62.compute-1.amazonaws.com:5432/d72n78i7ti6g8p")
 
 
 @app.route("/")
